@@ -39,7 +39,7 @@ lazy val scalatestVersion = settingKey[String]("")
 
 lazy val buildSettings = Seq(
   scalaVersion       := "2.13.0-RC2",
-  crossScalaVersions := Seq("2.12.8", "2.13.0-RC2"),
+  crossScalaVersions := Seq("2.12.8", "2.13.0"),
   scalatestVersion   := {
     CrossVersion.partialVersion(scalaVersion.value) match {
       case Some((2, 12)) =>
