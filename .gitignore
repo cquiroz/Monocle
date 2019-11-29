@@ -12,6 +12,7 @@
 *.class
 target/
 project/project/
+project/metals.sbt
 benchData/
 _site/
 

@@ -23,14 +23,14 @@ stages:
     if: ((branch = master AND type = push) OR (tag IS present)) AND (repo = julien-truffaut/Monocle)
 
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
+  - SCALAJS_VERSION=$SCALAJS_VERSION sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
   - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test packageSrc doc
 
 jobs:
   include:
     - stage: release
       name: Release
-      script: sbt ci-release
+      script: sbt ci-release; SCALAJS_VERSION=1.0.0-RC1 sbt monocleJS/ci-releease
 
 after_success:
 - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then bash
@@ -43,8 +43,9 @@ env:
     - secure: lJxaR+9VM96s7rfaigL3K2FbcP3XiZ+AerbgOBOpYi2anRkMPQ91h1g60HYTwEDGJIKybyNWFuXZM8hNtQMCxzxgu7ev1SyRr5Otfzg5ehGqB5UWbSAgpXlqhR5dAonwmqyEEDF2OK+k1fa0N6mIwpQeuUCwrt68kTp4f0K9jMQ=
     - secure: NZQn8lB04I+FO3Om680CXWP29scS/zRhITbLO/1sM3dnuG8ygn0fzlFMQhgCO3fCjnclThAi+6MN7UnyV8BwDbFhCDe627+06px5fHUw2TPdzhz/BwngAW9pRsx6m0b8eBqQmt8Q6mlgeYOPemsFOeqQTKZulpIhSYnO1R1Nwzc=
   matrix:
-    - TARGET=JVM PRE=test:compile
-    - TARGET=JS  PRE=test:fastOptJS
+    - TARGET=JVM                           PRE=test:compile
+    - TARGET=JS                            PRE=test:fastOptJS
+    - TARGET=JS  SCALAJS_VERSION=1.0.0-RC1 PRE=test:fastOptJS
 
 cache:
   directories:
