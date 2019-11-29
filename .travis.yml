@@ -23,14 +23,14 @@ stages:
     if: ((branch = master AND type = push) OR (tag IS present)) AND (repo = julien-truffaut/Monocle)
 
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
+  - SCALAJS_VERSION=$SCALAJS_VERSION sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
   - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test packageSrc doc
 
 jobs:
   include:
     - stage: release
       name: Release
-      script: sbt ci-release
+      script: sbt ci-release; SCALAJS_VERSION=1.0.0-RC1 sbt monocleJS/ci-releease
 
 after_success:
 - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then bash
@@ -45,6 +45,7 @@ env:
   matrix:
     - TARGET=JVM PRE=test:compile
     - TARGET=JS  PRE=test:fastOptJS
+    - TARGET=JS SCALAJS_VERSION=1.0.0-RC1 PRE=test:fastOptJS
 
 cache:
   directories:
